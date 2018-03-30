@@ -1,6 +1,5 @@
 body{
   font-family: monaco, Consolas, 'Lucida Console', monospace; 
-  margin: 0px;
 }
 
 .tooltip {
@@ -46,11 +45,18 @@ text{
 
 .route{
   max-width: 800px;
+  margin: 0px auto;
 }
 
 .direction{
   width: 49%;
   display: inline-block;
+}
+
+@media (max-width: 700px){
+  .direction{
+    width: 100%;
+  }
 }
 
 h3{

@@ -5,22 +5,27 @@ var stop2name = {"101":"Van Cortlandt Park - 242 St","103":"238 St","104":"231 S
 
 d3.select('html').selectAppend('div.tooltip').classed('.tooltip-hidden', true)
 
-d3.loadData('parsed-data/recent.tsv', 'stops.csv', function(err, res){
+var dataPath = location.href.includes('mta-status') ? 
+  'https://roadtolarissa.com/slinks/chart/parsed-data/recent.tsv' : 
+  'parsed-data/recent.tsv'
+
+d3.loadData(dataPath, function(err, res){
   data = res[0]
-  stops = res[1]
 
   data.forEach(function(d){
     d.arrivalTime = +d.arrival*1000
-    d.station = +d.stop.replace('N', '').replace('S', '')
 
     d.day = d3.timeFormat('%d')(d.arrivalTime)
     d.tstamp = d3.timeFormat('%d %H:%M')(d.arrivalTime)
 
     d.direction = _.last(d.stop.split(''))
     d.route = d.route.replace('X', '')
-  })
 
-  
+    d.station = d.stop.slice(0, 3)
+    if (!isNaN(d.route)) d.station = d.stop.replace(/[^0-9]+/g, '')
+    
+
+  })
 
   var byRoute = _.sortBy(d3.nestBy(data, d => d.route), d => d.key)
 
@@ -31,8 +36,6 @@ d3.loadData('parsed-data/recent.tsv', 'stops.csv', function(err, res){
     .appendMany('div.direction', d => d3.nestBy(d, d => d.direction))
   
   byDirSel.each(drawChart)
-  
-
 })
 
 
