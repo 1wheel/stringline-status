@@ -10,9 +10,12 @@ d3.loadData('parsed-data/51_2018-03-30.tsv', 'stops.csv', function(err, res){
   stops = res[1]
 
   data.forEach(function(d){
+    d.systemTime = +d.timestamp*1000
     d.arrivalTime = +d.arrival*1000
     d.station = +d.stop.replace('N', '').replace('S', '')
 
+    d.dif = d.arrivalTime - d.systemTime
+    d.absDif = Math.abs(d.dif)
     d.day = d3.timeFormat('%d')(d.arrivalTime)
     d.tstamp = d3.timeFormat('%d %H:%M')(d.arrivalTime)
 
@@ -59,6 +62,7 @@ function drawChart(data){
   
   var byTrainSel = c.svg.appendMany('g', byTrain)
   
+
   byTrainSel.append('path')
     .at({d: line, stroke: '#555', fill: 'none'})
     .call(d3.attachTooltip)
@@ -66,9 +70,9 @@ function drawChart(data){
     // .classed('highlight', d => highlights.includes(d.key))
   byTrainSel
     .filter((d, i) => i < 500)
-    .appendMany('circle', d => d)
+    .appendMany('circle', d => d.filter(d => d.absDif > 1000*60*-1))
     .translate(d => [c.x(d.arrivalTime), station2x[d.station]])
-    .at({r: d => 3, fill: 'steelblue', fillOpacity: .5, stroke: '#000'})
+    .at({r: d => 3, fill: d => d.dif < 0 ? 'steelblue' : 'orange', fillOpacity: .5, stroke: '#000'})
     .call(d3.attachTooltip)
 
 }

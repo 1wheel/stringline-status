@@ -4,12 +4,27 @@ var {_, d3, jp, fs, glob, io, queue, request} = require('scrape-stl')
 var parsedFiles = {}
 var slug2hash = {}
 
+var outDir = __dirname + '/../chart/parsed-data/'
+
 module.exports = function(){
   console.log('parse start', new Date())
   var files = glob.sync(__dirname + '/raw-data/*.gtfs')
     .filter(d => !parsedFiles[d])
 
-  jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0]).forEach(parseDay)
+  var allTiday = jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0])
+    .map(parseDay)
+
+  var curTime = (new Date())/1000
+  var recent = _.flatten(allTiday)
+    .filter(d => d.isValid)
+    .filter(d => curTime - d.timestamp < 60*60)
+
+  recent.forEach(d => {
+    delete d.isValid
+    delete d.timestamp
+  })
+
+  io.writeDataSync(outDir + 'recent.tsv', recent)
 }
 module.exports()
 
@@ -57,11 +72,10 @@ function parseDay(files){
     })
   })
 
-  // tidy = tidy.filter(d => d.isValid)
-  // tidy.forEach(d => delete d.isValid)
-
   console.log(files.key)
 
   // io.writeDataSync(__dirname + '/../parsed-data/' + date + '.json', tripStop2time)
-  io.writeDataSync(__dirname + '/../chart/parsed-data/' + files.key + '.tsv', tidy)
+  io.writeDataSync(outDir + files.key + '.tsv', tidy)
+
+  return tidy
 }
