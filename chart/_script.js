@@ -5,7 +5,7 @@ var stop2name = {"101":"Van Cortlandt Park - 242 St","103":"238 St","104":"231 S
 
 d3.select('html').selectAppend('div.tooltip').classed('.tooltip-hidden', true)
 
-var dataPath = location.href.includes('mta-status') ? 
+var dataPath = location.href.includes('mta-status') || 0 ? 
   'https://roadtolarissa.com/slinks/chart/parsed-data/recent.tsv' : 
   'parsed-data/recent.tsv'
 
@@ -20,7 +20,7 @@ d3.loadData(dataPath, function(err, res){
 
     d.direction = _.last(d.stop.split(''))
     d.isExpress = d.route.includes('X')
-    d.route = d.route.replace('X', '')
+    // d.route = d.route[0]
 
     d.station = d.stop.slice(0, 3)
     if (!isNaN(d.route)) d.station = d.stop.replace(/[^0-9]+/g, '')
@@ -29,6 +29,7 @@ d3.loadData(dataPath, function(err, res){
   })
 
   var byRoute = _.sortBy(d3.nestBy(data, d => d.route), d => d.key)
+  byRoute = _.sortBy(byRoute, d => d.key == 1 || d.key == 6 || d.key == 7 ? 0 : 1)
 
   byRouteSel = d3.select('#graph').html('').appendMany('div.route', byRoute)
   byRouteSel.append('h3').text(d => d.key)
@@ -51,7 +52,7 @@ function drawChart(data){
     train.tIndex = i
   })
 
-  c = d3.conventions({parentSel: d3.select(this), margin: {left: 100, top: 0, bottom: 0}, height: 300})
+  c = d3.conventions({parentSel: d3.select(this), margin: {left: 100, top: 10, bottom: 10}, height: 300})
   stations = _.sortBy(_.uniq(data.map(d => d.station)))
 
   longest = _.sortBy(byTrain, d => -d.length)[0]
@@ -62,14 +63,18 @@ function drawChart(data){
   // stations = _.sortBy(byStation, d => d3.median(d, d => d.arrival)).map(d => d.key)
   // stations = _.sortBy(byStation, d => d3.median(d, d => d.tIndex)).map(d => d.key)
 
-  c.x.domain(d3.extent(data, d => d.arrivalTime).reverse())
+  c.x.domain(d3.extent(data, d => d.arrivalTime))
   c.y.domain([0, stations.length - 1])
 
   station2x = {}
   stations.forEach((d, i) => station2x[d] = c.y(i))
 
-  c.xAxis.tickFormat(d3.timeFormat('%H:%M'))
-  c.yAxis.tickFormat(d => stop2name[stations[d]]).tickValues(d3.range(stations.length))
+  c.xAxis
+    .tickFormat(d3.timeFormat('%H:%M'))
+    .ticks(5)
+  c.yAxis
+    .tickFormat(d => stop2name[stations[d]])
+    .tickValues(d3.range(stations.length))
 
   d3.drawAxis(c)
 

@@ -43,7 +43,6 @@ function parseDay(files){
       if (!entity.trip_update) return
 
       var trip = entity.trip_update.trip.trip_id
-      var route = trip.split('_')[1].substring(0, 1)
 
       entity.trip_update.stop_time_update.forEach(d => {
         var stop = d.stop_id
@@ -56,7 +55,7 @@ function parseDay(files){
 
   var tidy = d3.entries(tripStop2time).map(d => {
     return {
-      route: d.key.split(' ')[0].split('_')[1].substring(0, 1),
+      route: d.key.split(' ')[0].split('_')[1].substring(0, 2),
       trip: d.key.split(' ')[0],
       stop: d.key.split(' ')[1],
       timestamp: d.value.split(' ')[0],
@@ -67,7 +66,7 @@ function parseDay(files){
 
   jp.nestBy(tidy, d => d.trip).forEach(trip => {
     jp.nestBy(trip, d => d.timestamp).forEach(timestamps => {
-      if (timestamps.length < 2) return
+      if (timestamps.length < 3) return
       timestamps.forEach(d => (d.isValid = false))
     })
   })
