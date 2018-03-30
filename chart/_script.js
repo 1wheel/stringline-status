@@ -19,6 +19,7 @@ d3.loadData(dataPath, function(err, res){
     d.tstamp = d3.timeFormat('%d %H:%M')(d.arrivalTime)
 
     d.direction = _.last(d.stop.split(''))
+    d.isExpress = d.route.includes('X')
     d.route = d.route.replace('X', '')
 
     d.station = d.stop.slice(0, 3)
@@ -45,12 +46,21 @@ function drawChart(data){
   byTrain = d3.nestBy(data, d => d.trip)
   byTrain = _.sortBy(byTrain, d => d[0].arrivalTime)
 
-  byTrain.forEach(function(train){
+  byTrain.forEach(function(train, i){
     train.tstampStart = train[0].tstamp
+    train.tIndex = i
   })
 
   c = d3.conventions({parentSel: d3.select(this), margin: {left: 100, top: 0, bottom: 0}, height: 300})
   stations = _.sortBy(_.uniq(data.map(d => d.station)))
+
+  longest = _.sortBy(byTrain, d => -d.length)[0]
+  longestStations = longest.map(d => d.station)
+  // stations = _.sortBy(stations, d => longestStations.indexOf(d))//.reverse()
+
+  byStation = d3.nestBy(data, d => d.station)
+  // stations = _.sortBy(byStation, d => d3.median(d, d => d.arrival)).map(d => d.key)
+  // stations = _.sortBy(byStation, d => d3.median(d, d => d.tIndex)).map(d => d.key)
 
   c.x.domain(d3.extent(data, d => d.arrivalTime).reverse())
   c.y.domain([0, stations.length - 1])
@@ -81,7 +91,7 @@ function drawChart(data){
     .filter((d, i) => i < 500)
     .appendMany('circle', d => d)
     .translate(d => [c.x(d.arrivalTime), station2x[d.station]])
-    .at({r: d => 3, fill: 'steelblue', fillOpacity: .5, stroke: '#000'})
+    .at({r: 3, fill: d => d.isExpress ? '#f0f' : 'steelblue', fillOpacity: .5, stroke: '#000'})
     .call(d3.attachTooltip)
 
 }
