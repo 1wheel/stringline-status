@@ -5,7 +5,7 @@ var stop2name = {"101":"Van Cortlandt Park - 242 St","103":"238 St","104":"231 S
 
 d3.select('html').selectAppend('div.tooltip').classed('.tooltip-hidden', true)
 
-var dataPath = location.href.includes('mta-status') || 0 ? 
+var dataPath = location.href.includes('mta-marey') ? 
   'https://roadtolarissa.com/slinks/chart/parsed-data/recent.tsv' : 
   'parsed-data/recent.tsv'
 
