@@ -5,7 +5,7 @@ var stop2name = {"101":"Van Cortlandt Park - 242 St","103":"238 St","104":"231 S
 
 d3.select('html').selectAppend('div.tooltip').classed('.tooltip-hidden', true)
 
-d3.loadData('parsed-data/51_2018-03-30.tsv', 'stops.csv', function(err, res){
+d3.loadData('parsed-data/recent.tsv', 'stops.csv', function(err, res){
   data = res[0]
   stops = res[1]
 
@@ -17,11 +17,21 @@ d3.loadData('parsed-data/51_2018-03-30.tsv', 'stops.csv', function(err, res){
     d.tstamp = d3.timeFormat('%d %H:%M')(d.arrivalTime)
 
     d.direction = _.last(d.stop.split(''))
+    d.route = d.route.replace('X', '')
   })
-  data = data.filter(d => d.isValid == 'true')
 
-  d3.select('#graph').html('')
-  d3.nestBy(data, d => d.direction).forEach(drawChart)
+  
+
+  var byRoute = _.sortBy(d3.nestBy(data, d => d.route), d => d.key)
+
+  byRouteSel = d3.select('#graph').html('').appendMany('div.route', byRoute)
+  byRouteSel.append('h3').text(d => d.key)
+  
+  var byDirSel = byRouteSel
+    .appendMany('div.direction', d => d3.nestBy(d, d => d.direction))
+  
+  byDirSel.each(drawChart)
+  
 
 })
 
@@ -36,11 +46,11 @@ function drawChart(data){
     train.tstampStart = train[0].tstamp
   })
 
-  c = d3.conventions({parentSel: d3.select('#graph'), margin: {left: 100}, height: 400})
+  c = d3.conventions({parentSel: d3.select(this), margin: {left: 100, top: 0, bottom: 0}, height: 300})
   stations = _.sortBy(_.uniq(data.map(d => d.station)))
 
   c.x.domain(d3.extent(data, d => d.arrivalTime).reverse())
-  c.y.domain([0, stations.length])
+  c.y.domain([0, stations.length - 1])
 
   station2x = {}
   stations.forEach((d, i) => station2x[d] = c.y(i))
