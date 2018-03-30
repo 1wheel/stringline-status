@@ -11,7 +11,7 @@ module.exports = function(){
 
   jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0]).forEach(parseDay)
 }
-// module.exports()
+module.exports()
 
 function parseDay(files){
   var tripStop2time = slug2hash[files.key] || {}
@@ -57,11 +57,11 @@ function parseDay(files){
     })
   })
 
-  tidy = tidy.filter(d => d.isValid)
-  tidy.forEach(d => delete d.isValid)
+  // tidy = tidy.filter(d => d.isValid)
+  // tidy.forEach(d => delete d.isValid)
 
   console.log(files.key)
 
   // io.writeDataSync(__dirname + '/../parsed-data/' + date + '.json', tripStop2time)
-  io.writeDataSync(__dirname + '/../parsed-data/' + files.key + '.tsv', tidy)
+  io.writeDataSync(__dirname + '/../chart/parsed-data/' + files.key + '.tsv', tidy)
 }
