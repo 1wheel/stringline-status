@@ -1,15 +1,25 @@
 var GtfsRealtimeBindings = require('gtfs-realtime-bindings');
 var {_, d3, jp, fs, glob, io, queue, request} = require('scrape-stl')
 
+var parsedFiles = {}
+var slug2hash = {}
 
-var files = glob.sync(__dirname + '/raw-data/*.gtfs')
+module.exports = function(){
+  console.log('parse start', new Date())
+  var files = glob.sync(__dirname + '/raw-data/*.gtfs')
+    .filter(d => !parsedFiles[d])
 
+  jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0]).forEach(parseDay)
+}
+// module.exports()
 
-jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0]).forEach(files => {
-
-  var tripStop2time = {}
+function parseDay(files){
+  var tripStop2time = slug2hash[files.key] || {}
+  slug2hash[files.key] = tripStop2time
 
   files.forEach(file => {
+    parsedFiles[file] = true
+
     try{
       var feed = GtfsRealtimeBindings.FeedMessage.decode(fs.readFileSync(file))
     } catch (e){ return }
@@ -50,6 +60,8 @@ jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0]).forEach(files => {
   tidy = tidy.filter(d => d.isValid)
   tidy.forEach(d => delete d.isValid)
 
+  console.log(files.key)
+
   // io.writeDataSync(__dirname + '/../parsed-data/' + date + '.json', tripStop2time)
   io.writeDataSync(__dirname + '/../parsed-data/' + files.key + '.tsv', tidy)
-})
+}
