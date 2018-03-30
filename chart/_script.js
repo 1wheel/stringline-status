@@ -23,6 +23,13 @@ d3.loadData('parsed-data/51_2018-03-30.tsv', 'stops.csv', function(err, res){
   })
   data = data.filter(d => d.isValid == 'true')
 
+  d3.select('#graph').html('')
+  d3.nestBy(data, d => d.direction).forEach(drawChart)
+
+})
+
+
+function drawChart(data){
   data = _.sortBy(data, d => d.arrivalTime)
 
   byTrain = d3.nestBy(data, d => d.trip)
@@ -32,25 +39,25 @@ d3.loadData('parsed-data/51_2018-03-30.tsv', 'stops.csv', function(err, res){
     train.tstampStart = train[0].tstamp
   })
 
-  c = d3.conventions({parentSel: d3.select('#graph').html(''), margin: {left: 50}, height: 400, width: 790})
+  c = d3.conventions({parentSel: d3.select('#graph'), margin: {left: 100}, height: 400})
   stations = _.sortBy(_.uniq(data.map(d => d.station)))
 
-  c.y.domain(d3.extent(data, d => d.arrivalTime).reverse())
-  c.x.domain([0, stations.length])
+  c.x.domain(d3.extent(data, d => d.arrivalTime).reverse())
+  c.y.domain([0, stations.length])
 
   station2x = {}
-  stations.forEach((d, i) => station2x[d] = c.x(i))
+  stations.forEach((d, i) => station2x[d] = c.y(i))
 
-  c.yAxis.tickFormat(d3.timeFormat('%H:%M'))
-  c.xAxis.tickFormat(d => stop2name[stations[d]])
+  c.xAxis.tickFormat(d3.timeFormat('%H:%M'))
+  c.yAxis.tickFormat(d => stop2name[stations[d]]).tickValues(d3.range(stations.length))
 
   d3.drawAxis(c)
 
   var rScale = d3.scaleSqrt().domain([0, 1000*60*10]).range([1, 12]).clamp(true)
 
   var line = d3.line()
-    .y(d => c.y(d.arrivalTime))
-    .x(d => station2x[d.station])
+    .x(d => c.x(d.arrivalTime))
+    .y(d => station2x[d.station])
 
   
   var byTrainSel = c.svg.appendMany('g', byTrain)
@@ -64,7 +71,8 @@ d3.loadData('parsed-data/51_2018-03-30.tsv', 'stops.csv', function(err, res){
   byTrainSel
     .filter((d, i) => i < 500)
     .appendMany('circle', d => d.filter(d => d.absDif > 1000*60*-1))
-    .translate(d => [station2x[d.station], c.y(d.arrivalTime)])
+    .translate(d => [c.x(d.arrivalTime), station2x[d.station]])
     .at({r: d => 3, fill: d => d.dif < 0 ? 'steelblue' : 'orange', fillOpacity: .5, stroke: '#000'})
     .call(d3.attachTooltip)
-})
+
+}
