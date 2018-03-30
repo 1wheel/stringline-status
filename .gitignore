@@ -1,3 +1,5 @@
+server/raw-data/*
+
 # Logs
 logs
 *.log
