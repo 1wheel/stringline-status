@@ -5,6 +5,7 @@
   },
   "scripts": {
     "deploy": "cd .. && rsync -a --omit-dir-times --no-perms --exclude node_modules --exclude serve/raw-data --exclude .git --exclude remote-games --exclude chart/parsed-data stringline-status/ demo@roadtolarissa.com:stringline-status/",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "sync": "rsync -a --omit-dir-times --no-perms demo@roadtolarissa.com:stringline-status/server/raw-data/ server/raw-data/"
   }
 }

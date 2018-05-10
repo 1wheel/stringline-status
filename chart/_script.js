@@ -6,12 +6,17 @@ var stop2name = {"101":"Van Cortlandt Park - 242 St","103":"238 St","104":"231 S
 d3.select('html').selectAppend('div.tooltip').classed('.tooltip-hidden', true)
 
 var dataPath = location.href.includes('mta-marey') ? 
-  'https://roadtolarissa.com/slinks/chart/parsed-data/recent.tsv' : 
-  'parsed-data/recent.tsv'
+  'https://roadtolarissa.com/slinks/chart/parsed-data/01_2018-04-02.tsv' : 
+  'parsed-data/01_2018-04-02.tsv'
 
 d3.loadData(dataPath, function(err, res){
   data = res[0]
 
+  var endDate = new Date('2018-04-02T21:29:35.598Z')/1000
+
+  data = data.filter(d => d.timestamp > endDate - 60*60*1.2)
+  data = data.filter(d => d.timestamp < endDate)
+  data = data.filter(d => d.isValid == 'true')
   data.forEach(function(d){
     d.arrivalTime = +d.arrival*1000
 
@@ -96,7 +101,7 @@ function drawChart(data){
     .filter((d, i) => i < 500)
     .appendMany('circle', d => d)
     .translate(d => [c.x(d.arrivalTime), station2x[d.station]])
-    .at({r: 3, fill: d => d.isExpress ? '#f0f' : 'steelblue', fillOpacity: .5, stroke: '#000'})
+    .at({r: 3, fill: d => d.trip == "098700_1..N03R" ? '#f0f' : 'steelblue', fillOpacity: .5, stroke: '#000'})
     .call(d3.attachTooltip)
 
 }

@@ -6,18 +6,23 @@ var slug2hash = {}
 
 var outDir = __dirname + '/../chart/parsed-data/'
 
+
+
 module.exports = function(){
   console.log('parse start', new Date())
   var files = glob.sync(__dirname + '/raw-data/*.gtfs')
     .filter(d => !parsedFiles[d])
 
-  var allTiday = jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0])
+  var allTidy = jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0])
     .map(parseDay)
 
   var curTime = (new Date())/1000
-  var recent = _.flatten(allTiday)
+  var curTime = new Date('2018-04-02T21:30:35.598Z')/1000
+
+  console.log(allTidy)
+  var recent = _.flatten(allTidy)
     .filter(d => d.isValid)
-    .filter(d => curTime - d.timestamp < 60*60)
+    // .filter(d => curTime - d.timestamp < 60*60)
 
   recent.forEach(d => {
     delete d.isValid
@@ -29,6 +34,9 @@ module.exports = function(){
 module.exports()
 
 function parseDay(files){
+  if (files.key != '/01_2018-04-02') return []
+  console.log(files.key)
+
   var tripStop2time = slug2hash[files.key] || {}
   slug2hash[files.key] = tripStop2time
 
