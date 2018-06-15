@@ -12,8 +12,8 @@ module.exports = function(){
   var curDate = d3.isoFormat(new Date()).slice(0, 10)
   console.log('curDate', curDate)
 
-  var files = glob.sync(__dirname + '/raw-data/*.gtfs')
-    .filter(d => d.includes(curDate))
+  var files = glob.sync(__dirname + `/raw-data/*${curDate}*.gtfs`)
+    // .filter(d => d.includes(curDate))
     .filter(d => !parsedFiles[d])
 
   console.log('num files', files.length)
