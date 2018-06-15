@@ -8,14 +8,21 @@ var outDir = __dirname + '/../chart/parsed-data/'
 
 module.exports = function(){
   console.log('parse start', new Date())
+
+  var curDate = d3.isoFormat(new Date()).slice(0, 10)
+  console.log('curDate', curDate)
+
   var files = glob.sync(__dirname + '/raw-data/*.gtfs')
+    .filter(d => d.includes(curDate))
     .filter(d => !parsedFiles[d])
 
-  var allTiday = jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0])
+  console.log('num files', files.length)
+
+  var allTidy = jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0])
     .map(parseDay)
 
   var curTime = (new Date())/1000
-  var recent = _.flatten(allTiday)
+  var recent = _.flatten(allTidy)
     .filter(d => d.isValid)
     .filter(d => curTime - d.timestamp < 60*60)
 
@@ -71,7 +78,7 @@ function parseDay(files){
     })
   })
 
-  console.log(files.key)
+  console.log(files.key, files.length)
 
   // io.writeDataSync(__dirname + '/../parsed-data/' + date + '.json', tripStop2time)
   io.writeDataSync(outDir + files.key + '.tsv', tidy)
