@@ -6,7 +6,7 @@ var slug2hash = {}
 
 var outDir = __dirname + '/../chart/parsed-data/'
 
-module.exports = function(){
+function parse(){
   console.log('parse start', new Date())
 
   var curDate = d3.isoFormat(new Date()).slice(0, 10)
@@ -33,7 +33,7 @@ module.exports = function(){
 
   io.writeDataSync(outDir + 'recent.tsv', recent)
 }
-module.exports()
+
 
 function parseDay(files){
   var tripStop2time = slug2hash[files.key] || {}
@@ -85,3 +85,8 @@ function parseDay(files){
 
   return tidy
 }
+console.log('10')
+
+
+parse()
+setInterval(parse, 60*1000)

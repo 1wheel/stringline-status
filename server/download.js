@@ -5,7 +5,7 @@ var outDir = __dirname + '/raw-data/';
 
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir);
 
-module.exports = () => {
+function download(){
   feeds.forEach(feed => {
     var url = 'http://datamine.mta.info/mta_esi.php?key=a1fce28a47b1b0a9a20a32b27ffd941d&feed_id=' + feed 
 
@@ -20,4 +20,5 @@ module.exports = () => {
   })
 }
 
-module.exports()
+download()
+setInterval(download, 15*1000)
