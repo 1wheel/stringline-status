@@ -1,4 +1,5 @@
 server/raw-data/*
+server/raw-days/*
 chart/parsed-data/*
 
 # Logs

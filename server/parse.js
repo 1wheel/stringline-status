@@ -5,6 +5,7 @@ var parsedFiles = {}
 var slug2hash = {}
 
 var outDir = __dirname + '/../chart/parsed-data/'
+console.log(outDir)
 
 function parse(){
   console.log('parse start', new Date())
@@ -12,13 +13,13 @@ function parse(){
   var curDate = d3.isoFormat(new Date()).slice(0, 10)
   console.log('curDate', curDate)
 
-  var files = glob.sync(__dirname + `/raw-data/*${curDate}*.gtfs`)
+  var files = glob.sync(__dirname + `/raw-days/${curDate}/*.gtfs`)
     // .filter(d => d.includes(curDate))
     .filter(d => !parsedFiles[d])
 
   console.log('num files', files.length)
 
-  var allTidy = jp.nestBy(files, d => d.split('raw-data')[1].split('T')[0])
+  var allTidy = jp.nestBy(files, d => d.split('raw-days/' + curDate + '/')[1].split('T')[0])
     .map(parseDay)
 
   var curTime = (new Date())/1000
@@ -81,6 +82,7 @@ function parseDay(files){
   console.log(files.key, files.length)
 
   // io.writeDataSync(__dirname + '/../parsed-data/' + date + '.json', tripStop2time)
+  console.log(outDir + files.key)
   io.writeDataSync(outDir + files.key + '.tsv', tidy)
 
   return tidy
