@@ -1,10 +1,12 @@
 {
+	"license": "MIT",
   "dependencies": {
     "gtfs-realtime-bindings": "^0.0.4",
     "scrape-stl": "^1.0.3"
   },
   "scripts": {
-    "deploy": "cd .. && rsync -a --omit-dir-times --no-perms --exclude node_modules --exclude serve/raw-data --exclude .git --exclude remote-games --exclude chart/parsed-data stringline-status/ demo@roadtolarissa.com:stringline-status/",
-    "start": "node server/index.js"
+    "deploy": "cd .. && rsync -a --omit-dir-times --no-perms --exclude node_modules  --exclude .git --exclude serve/raw-data --exclude serve/raw-days--exclude chart/parsed-data stringline-status/ demo@roadtolarissa.com:stringline-status/",
+    "start": "pm2 start -n mta-download server/download.js && pm2 start -n mta-parse server/parse.js",
+    "reload": "pm2 reload mta-download && pm2 reload mta-parse"
   }
 }
