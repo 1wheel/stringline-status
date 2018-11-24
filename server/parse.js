@@ -5,6 +5,7 @@ var {execSync} = require('child_process')
 var parsedFiles = {}
 var slug2hash = {}
 
+var dayDir = __dirname + `/raw-days/`
 var outDir = __dirname + '/../chart/parsed-data/'
 console.log(outDir)
 
@@ -16,7 +17,7 @@ function parse(){
   var curDate = d3.isoFormat(new Date()).slice(0, 10)
   console.log('curDate', curDate)
 
-  var files = glob.sync(__dirname + `/raw-days/${curDate}/*.gtfs`)
+  var files = glob.sync(dayDir + `${curDate}/*.gtfs`)
     // .filter(d => d.includes(curDate))
     .filter(d => !parsedFiles[d])
 
@@ -38,10 +39,20 @@ function parse(){
   io.writeDataSync(outDir + 'recent.tsv', recent)
 
 
-  var days = glob.sync(__dirname + `/raw-days/*`)
+  var days = glob.sync(dayDir + `*`)
   days.slice(0, -2).forEach(path => {
-    console.log('zipping', path)
-    execSync(`tar -zcf ${path}.tar.gz ${path} && rm -rf ${path}`)
+    if (path.includes('tar.gz')) return 
+
+    var day = path.replace(dayDir, '')
+
+    console.log('zipping', {path, day})
+
+    execSync(`
+      cd ${dayDir}
+      tar -zcf ${day}.tar.gz.temp ${day} && 
+      mv ${day}.tar.gz.temp ${day}.tar.gz && 
+      rm -rf ${day}`
+    )
   })
 }
 
