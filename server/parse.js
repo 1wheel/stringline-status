@@ -1,11 +1,14 @@
 var GtfsRealtimeBindings = require('gtfs-realtime-bindings');
 var {_, d3, jp, fs, glob, io, queue, request} = require('scrape-stl')
+var {execSync} = require('child_process')
 
 var parsedFiles = {}
 var slug2hash = {}
 
 var outDir = __dirname + '/../chart/parsed-data/'
 console.log(outDir)
+
+
 
 function parse(){
   console.log('parse start', new Date())
@@ -33,6 +36,13 @@ function parse(){
   })
 
   io.writeDataSync(outDir + 'recent.tsv', recent)
+
+
+  var days = glob.sync(__dirname + `/raw-days/*`)
+  days.slice(0, -2).forEach(path => {
+    console.log('zipping', path)
+    execSync(`tar -zcf ${path}.tar.gz ${path} && rm -rf ${path}`)
+  })
 }
 
 
