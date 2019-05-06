@@ -15,7 +15,7 @@ Transit Center?
 - http://datamine.mta.info/sites/all/files/pdfs/GTFS-Realtime-NYC-Subway%20version%201%20dated%207%20Sep.pdf
 - https://trid.trb.org/view/1338766
 
-## Blog posts
+## Blog Posts
 - http://www.residentmar.io/2018/01/29/gtfs-tripify.html
 - http://www.residentmar.io/2018/08/29/subway-explorer.html
 - https://toddwschneider.com/posts/nyc-subway-data-analysis/
