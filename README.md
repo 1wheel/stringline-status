@@ -28,7 +28,7 @@ Transit Center?
 
 ## Threads
 
-(No historical mta data after 11/19/2015)[https://groups.google.com/forum/#!topic/mtadeveloperresources/Fs6v6yzTj9Q])
+[No historical mta data after 11/19/2015][https://groups.google.com/forum/#!topic/mtadeveloperresources/Fs6v6yzTj9Q]
 
 
 ## Misc notes
