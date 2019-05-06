@@ -1,6 +1,6 @@
 # stringline-status
 
-## Historical Data
+## Historic Data
 
 - `2014/09 - 2015/11` [MTA Archive](http://web.mta.info/developers/resources/nyct/MTA-Bus-Time-documentation.htm)
 - `2015/08 - 2017/06` [Nathan Johnson](http://data.beta.nyc/dataset/unofficial-mta-transit-data-archive) 
