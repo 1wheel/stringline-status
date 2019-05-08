@@ -1,6 +1,7 @@
 var {_, d3, jp, fs, glob, io, queue, request} = require('scrape-stl')
 
-var feeds = '1 26 16 21 2 11 31 36 51'.split(' ')
+var feeds = '1 2 26 16 21 2 11 31 36 51'.split(' ')
+var feeds = ['2'] // only the L 
 var outDir = __dirname + '/raw-days/'
 
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir)
@@ -31,3 +32,14 @@ function download(){
 
 download()
 setInterval(download, 10*1000)
+
+
+// poor man's lockfile
+require('http')
+  .createServer((req, res) => {
+    res.writeHead(200, {'Content-Type': 'text/plain'})
+    res.write('stringling download running')
+    res.end()
+  })
+  .listen(4001)
+

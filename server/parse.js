@@ -9,8 +9,6 @@ var dayDir = __dirname + `/raw-days/`
 var outDir = __dirname + '/../chart/parsed-data/'
 console.log(outDir)
 
-
-
 function parse(){
   console.log('parse start', new Date())
 
@@ -108,8 +106,17 @@ function parseDay(files){
 
   return tidy
 }
-console.log('10')
 
 
 parse()
 setInterval(parse, 60*1000)
+
+
+// poor man's lockfile
+require('http')
+  .createServer((req, res) => {
+    res.writeHead(200, {'Content-Type': 'text/plain'})
+    res.write('stringling download running')
+    res.end()
+  })
+  .listen(4002)
