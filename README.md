@@ -2,13 +2,14 @@
 
 ## Historic Data
 
-- `2014/09 - 2015/11` [MTA Archive](http://web.mta.info/developers/resources/nyct/MTA-Bus-Time-documentation.htm)
-- `2015/08 - 2017/06` [Nathan Johnson](http://data.beta.nyc/dataset/unofficial-mta-transit-data-archive) 
-- `2017/07 - 2018/10` NYT, missing chuncks
-- `2018/01 - 2019/05` [Todd Schneider](https://github.com/toddwschneider/nyc-subway-data/tree/master/analysis)
+- `2014/09 - 2015/11` [MTA Archive, 5 min resolution](http://web.mta.info/developers/resources/nyct/MTA-Bus-Time-documentation.htm)
+- `2015/08 - 2017/06` [Nathan Johnson, offline](http://data.beta.nyc/dataset/unofficial-mta-transit-data-archive) 
+- `2017/07 - 2019/05` NYT, missing days and lines
+- `2018/01 - 2018/05` [Todd Schneider](https://github.com/toddwschneider/nyc-subway-data/tree/master/analysis)
 - `2018/08 - 2019/03` [MTA GTFS-RT Archive Data](http://web.mta.info/developers/data/archives.html)
+- `2011/05` [MTA ATS Movement Data](http://web.mta.info/developers/developer-data-terms.html#data)
+- Transit Center?
 
-Transit Center?
 
 ## Offical Docs
 
@@ -25,6 +26,7 @@ Transit Center?
 ## Code
 - https://github.com/toddwschneider/nyc-subway-data
 - https://github.com/ResidentMario/gtfs-tripify
+- https://github.com/availabs/MTA_Subway_SIRI_Server
 
 ## Threads
 
