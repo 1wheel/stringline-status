@@ -7,9 +7,9 @@
 - `2017/07 - 2019/05` NYT, missing days and lines
 - `2018/01 - 2018/05` [Todd Schneider](https://github.com/toddwschneider/nyc-subway-data/tree/master/analysis)
 - `2018/08 - 2019/03` [MTA GTFS-RT Archive Data](http://web.mta.info/developers/data/archives.html)
+- `2018/05 - 2019/05` [https://groups.google.com/forum/#!topic/mtadeveloperresources/aQqS_f9oYSY](https://groups.google.com/forum/#!topic/mtadeveloperresources/aQqS_f9oYSY)
 - `2011/05` [MTA ATS Movement Data](http://web.mta.info/developers/developer-data-terms.html#data)
-- Transit Center?
-
+- `2017/07 - 2019/05` [Transit Center Bus](https://github.com/Bus-Data-NYC/mta-bus-archive/blob/master/README.md)
 
 ## Offical Docs
 
@@ -22,6 +22,7 @@
 - https://toddwschneider.com/posts/nyc-subway-data-analysis/
 - https://pvibien.com/stringline.htm
 - https://www.goodservice.io/trains
+- https://erikbern.com/2016/04/04/nyc-subway-math.html
 
 ## Code
 - https://github.com/toddwschneider/nyc-subway-data
